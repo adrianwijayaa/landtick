@@ -4,6 +4,7 @@ import (
 	"backend/database"
 	"backend/pkg/mysql"
 	"backend/routes"
+	"os"
 
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
@@ -19,10 +20,7 @@ func main() {
 		AllowHeaders: []string{"X-Requested-With", "Content-Type", "Authorization"},
 	}))
 
-	errEnv := godotenv.Load()
-	if errEnv != nil {
-		panic("Failed to load env file")
-	}
+	godotenv.Load()
 
 	mysql.DatabaseInit()
 	database.RunMigration()
@@ -31,8 +29,8 @@ func main() {
 
 	e.Static("/uploads", "./uploads")
 
-	// var PORT = os.Getenv("PORT")
+	var PORT = os.Getenv("PORT")
 
 	// fmt.Println("Server running on localhost: " + PORT)
-	e.Logger.Fatal(e.Start("localhost:5000"))
+	e.Logger.Fatal(e.Start(":" + PORT))
 }
